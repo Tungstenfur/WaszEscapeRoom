@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Login";
+}
+<div class="formWrap">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+    <form method="post">
+        <label for="username">Nazwa użytkownika</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Zaloguj się</button>
+    </form>
+</div>

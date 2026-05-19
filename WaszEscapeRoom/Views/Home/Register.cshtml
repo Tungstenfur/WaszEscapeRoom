@@ -1,0 +1,35 @@
+@{ ViewData["Title"] = "Register"; }
+<div class="formWrap">
+    <div id="error"></div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+    <form method="post">
+        <label for="username">Nazwa użytkownika</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password">
+        <label for="repassword">Powtórz hasło</label>
+        <input type="password" id="repassword" name="repassword">
+        <button type="submit" id="register">Zarejestruj się</button>
+    </form>
+</div>
+<script>
+    var submitButton = document.getElementById("register");
+    submitButton.addEventListener("click", function (event) {
+        var password = document.getElementById("password").value;
+        var repassword = document.getElementById("repassword").value;
+        if (password !== repassword) {
+            event.preventDefault();
+            var error = document.getElementById("error");
+            error.innerText = "Hasła nie są takie same!";
+            error.style.display = "block";
+        }
+    });
+</script>
