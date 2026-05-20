@@ -1,6 +1,6 @@
 @{ ViewData["Title"] = "Register"; }
 <div class="formWrap">
-    <div id="error"></div>
+    <div class="alert alert-danger" id="error"></div>
     @if (!ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger">

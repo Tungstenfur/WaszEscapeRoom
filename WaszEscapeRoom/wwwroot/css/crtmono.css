@@ -1,0 +1,179 @@
+﻿@font-face {
+    font-family: "VT323";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../VT323-Regular.woff");
+}
+* {
+    font-family: "VT323", monospace;
+}
+body {
+    margin: 0;
+    padding: 0;
+    transform: perspective(1000px) scale(1.02);
+    padding: 2%;
+    overflow-x: hidden;
+}
+html::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: radial-gradient(
+            ellipse at center,
+            transparent 60%,
+            rgba(0, 0, 0, 0.5) 100%
+    );
+    width: 100%;
+    height: 100%;
+}
+#pause-text {
+    text-align: center;
+}
+html::after {
+    content: "";
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.25) 0px,
+            rgba(0, 0, 0, 0.25) 1px,
+            transparent 1px,
+            transparent 3px
+    );
+    width: 100%;
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.icon {
+    width: 2em;
+    height: 2em;
+}
+.score {
+    font-size: 3em;
+    color: #8b8;
+}
+canvas {
+    image-rendering: pixelated;
+    filter: blur(1.5px);
+    box-shadow: 0px 0px 10px #00ff0044;
+}
+.crt-wrap {
+    position: relative;
+    width: min(50vw, 50vh);
+    height: min(50vw, 50vh);
+    box-sizing: border-box;
+}
+.crt-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.typing-text {
+    font-weight: bold;
+    white-space: pre-line;
+}
+.line-typing {
+    opacity: 0;
+    transform: translateY(2px);
+}
+.line-typing.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+            opacity 20ms linear,
+            transform 20ms ease-out;
+}
+a {
+    color: #8b8;
+    text-decoration: none;
+    font-size: 1.5em;
+    margin-top: 1em;
+}
+html {
+    background: #051005;
+    padding: 1em;
+    color: #eee;
+    font-size: 1em;
+    line-height: 1;
+    letter-spacing: 0.125em;
+    animation-duration: 0.1s;
+    animation-name: textflicker;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    user-select: none;
+}
+form * {
+    text-align: center;
+}
+form label {
+    display: block;
+    font-size: 1em;
+    margin-bottom: 0.5em;
+}
+form input {
+    width: 100%;
+    font-size: 1.5em;
+}
+form button {
+    background-color: #8b8;
+    color: #051005;
+    border: none;
+    width: 100%;
+    padding: 0.2em;
+    font-size: 1.5em;
+    margin-top: 1em;
+}
+input {
+    background-color: #ffffff22;
+    color: #8b8;
+    border: none;
+}
+@keyframes textflicker {
+    from {
+        text-shadow:
+                1px 0 0 #45ea3629,
+                -2px -0px 2px #75fa69;
+    }
+    to {
+        text-shadow:
+                2px 0.5px 2px #45ea3629,
+                -1px -0.5px 2px #75fa69;
+    }
+}
+::-webkit-scrollbar {
+    width: 0.5em;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #052005;
+}
+::-webkit-scrollbar-track {
+    background: #051005
+    repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.25) 0px,
+            rgba(0, 0, 0, 0.25) 1px,
+            transparent 1px,
+            transparent 3px
+    );
+}
+::-webkit-scrollbar-thumb {
+    background: #051505
+    repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.25) 0px,
+            rgba(0, 0, 0, 0.25) 1px,
+            transparent 1px,
+            transparent 3px
+    );
+}

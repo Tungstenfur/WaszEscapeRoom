@@ -105,13 +105,5 @@ button:focus-visible {
 #error
 {
     width: min(100%, calc(28rem + 100px));
-    font-weight: bolder;
-    padding: 1rem;
     display: none;
-    border: red solid 3px;
-    border-radius: 0.5rem;
-    color: Red;
-    background-color: #fcc;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
 }
