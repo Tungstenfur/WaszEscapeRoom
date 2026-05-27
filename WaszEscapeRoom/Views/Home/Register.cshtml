@@ -1,15 +1,14 @@
 @{ ViewData["Title"] = "Register"; }
 <div class="formWrap">
-    <div class="alert alert-danger" id="error"></div>
+    <div class="alert alert-danger" id="error">
     @if (!ViewData.ModelState.IsValid)
     {
-        <div class="alert alert-danger">
             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
             {
                 <p>@error.ErrorMessage</p>
             }
-        </div>
     }
+    </div>
     <form method="post">
         <label for="username">Nazwa użytkownika</label>
         <input type="text" id="username" name="username">

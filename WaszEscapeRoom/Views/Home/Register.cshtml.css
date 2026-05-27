@@ -102,8 +102,3 @@ button:focus-visible {
         font-size: 1.6rem;
     }
 }
-#error
-{
-    width: min(100%, calc(28rem + 100px));
-    display: none;
-}

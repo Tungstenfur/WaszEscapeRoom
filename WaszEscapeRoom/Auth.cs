@@ -6,10 +6,6 @@ namespace WaszEscapeRoom;
 
 internal static class Auth
 {
-    public static string Login(string username, string password)
-    {
-        throw new NotImplementedException();
-    }
     public static string HashPassword(string password)
     {
         byte[] salt = RandomNumberGenerator.GetBytes(16);

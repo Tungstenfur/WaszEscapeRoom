@@ -15,6 +15,12 @@ public class Database
                        "password VARCHAR(255) NOT NULL)";
         using var command = new MySqlCommand(query, connection);
         command.ExecuteNonQuery();
+        query = "CREATE TABLE IF NOT EXISTS Progress (" +
+                       "id int PRIMARY KEY AUTO_INCREMENT,"+
+                       "current_level INT NOT NULL"
+                          +")";
+        using var command2 = new MySqlCommand(query, connection);
+        command2.ExecuteNonQuery();
         connection.Close();
     }
     public static LoginResult verifyLogin(string username, string password)
@@ -57,5 +63,20 @@ public class Database
             }
             throw;
         }
+    }
+
+    public static int GetCurrentLevel(string username)
+    {
+        using var connection = new MySqlConnection(_login);
+        connection.Open();
+        string query = "SELECT current_level FROM Progress WHERE id = (SELECT id FROM users WHERE username = @username)";
+        using var command = new MySqlCommand(query, connection);
+        command.Parameters.AddWithValue("@username", username);
+        var result = command.ExecuteScalar();
+        if (result is not null)
+        { 
+            return Convert.ToInt32(result);
+        }
+        return 0;
     }
 }
