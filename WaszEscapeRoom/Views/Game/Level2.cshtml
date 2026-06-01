@@ -1,0 +1,287 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Level 2</title>
+    <style>
+      body {
+        margin: 0;
+        background: #ffffee;
+        animation: alarm 2s infinite;
+        overflow: hidden;
+      }
+
+      .layout {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 24px;
+      }
+
+      .door {
+        width: min(60vw, 60vh);
+        height: auto;
+        justify-self: center;
+      }
+
+      .box {
+        width: min(40vh, 40vw);
+        height: auto;
+        justify-self: end;
+        cursor: pointer;
+      }
+
+      .panel {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      .panel.open {
+        display: flex;
+      }
+
+      .panel-inner {
+        width: min(560px, 92vw);
+        padding: 18px;
+        background: #f2ead8;
+        border: 2px solid #3c332a;
+        border-radius: 14px;
+        display: grid;
+        gap: 16px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .code-panel {
+        width: 140px;
+        height: auto;
+        justify-self: center;
+      }
+
+      .wire-board {
+        width: 100%;
+        height: auto;
+      }
+
+      .wire {
+        fill: none;
+        stroke: #3b3127;
+        stroke-width: 8;
+        stroke-linecap: round;
+        cursor: pointer;
+      }
+
+      .wire.active {
+        stroke: #d43b2a;
+      }
+
+      .code-readout {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        font-family: "Courier New", monospace;
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        color: #1f1a14;
+      }
+
+      @@media (max-width: 720px) {
+        .layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          justify-items: center;
+        }
+
+        .box {
+          justify-self: center;
+        }
+      }
+
+      @@keyframes alarm {
+        0% {
+          background: #ffffee;
+        }
+        50% {
+          background: #ff9999;
+        }
+        100% {
+          background: #ffffee;
+        }
+      }
+      .code-panel{
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="layout">
+      <div aria-hidden="true"></div>
+      <img
+        class="door"
+        src="/img/heavyDoor.svg"
+        alt="Heavy door"
+        draggable="false"
+      />
+      <img
+        class="box"
+        src="/img/elecBox.svg"
+        alt="Electrical box"
+        draggable="false"
+      />
+    </main>
+  <div class="panel" aria-hidden="true">
+    <div class="panel-inner" role="dialog" aria-label="Electrical panel">
+      <img
+        class="code-panel"
+        src="/img/code.svg"
+        alt="Code panel"
+        draggable="false"
+        id="code-panel"
+      />
+      <svg
+        class="wire-board"
+        viewBox="0 0 320 180"
+        role="img"
+        aria-label="Wire board"
+      >
+        <rect
+          x="10"
+          y="10"
+          width="300"
+          height="160"
+          rx="10"
+          fill="#e6ddca"
+          stroke="#3c332a"
+          stroke-width="2"
+        />
+        <path
+          class="wire"
+          data-wire="w1"
+          d="M40 30 L150 30 L210 60 L280 60"
+        />
+        <path
+          class="wire"
+          data-wire="w2"
+          d="M40 55 L120 55 L170 85 L280 85"
+        />
+        <path
+          class="wire"
+          data-wire="w3"
+          d="M40 80 L160 80 L220 110 L280 110"
+        />
+        <path
+          class="wire"
+          data-wire="w4"
+          d="M40 105 L130 105 L190 135 L280 135"
+        />
+        <path
+          class="wire"
+          data-wire="w5"
+          d="M40 130 L150 130 L210 150 L280 150"
+        />
+      </svg>
+      <div class="code-readout" aria-live="polite">
+        <span class="code-slot">_</span>
+        <span class="code-slot">_</span>
+        <span class="code-slot">_</span>
+        <span class="code-slot">_</span>
+        <span class="code-slot">_</span>
+      </div>
+    </div>
+  </div>
+  <form class="code-form" action="/game/level3" method="post">
+        <input type="hidden" name="code" class="code-input" value="" />
+  </form>
+    <script>
+      const alarmAudio = new Audio("/sound/regularSiren.ogg");
+      alarmAudio.loop = true;
+
+      const startAlarm = () => {
+        alarmAudio.play().catch(() => {
+        });
+      };
+
+      startAlarm();
+      document.addEventListener("click", startAlarm, { once: true });
+      document.addEventListener("keydown", startAlarm, { once: true });
+
+      const panel = document.querySelector(".panel");
+      const box = document.querySelector(".box");
+      const code_panel = document.querySelector(".code-panel");
+      const wires = Array.from(document.querySelectorAll(".wire"));
+      const slots = Array.from(document.querySelectorAll(".code-slot"));
+      const sequence = ["w3", "w1", "w5", "w2", "w4"];
+      const code = ["8", "1", "6", "4", "9"];
+      let progress = 0;
+      code_panel.addEventListener("click", () => 
+      {
+        const code_prompt = prompt("Enter the 5-digit code:");
+        if (code_prompt === code.join("")) {
+          const code_form = document.querySelector(".code-form");
+          const code_input = document.querySelector(".code-input");
+          code_input.value = code.join("");
+          code_form.submit();
+        }
+      })
+      const resetPuzzle = () => {
+        progress = 0;
+        slots.forEach((slot) => {
+          slot.textContent = "_";
+        });
+        wires.forEach((wire) => {
+          wire.classList.remove("active");
+        });
+      };
+
+      const openPanel = () => {
+        panel.classList.add("open");
+        resetPuzzle();
+      };
+
+      const closePanel = () => {
+        panel.classList.remove("open");
+      };
+
+      box.addEventListener("click", openPanel);
+
+      panel.addEventListener("click", (event) => {
+        if (event.target === panel) {
+          closePanel();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closePanel();
+        }
+      });
+
+      wires.forEach((wire) => {
+        wire.addEventListener("click", () => {
+          if (!panel.classList.contains("open")) {
+            return;
+          }
+
+          const id = wire.dataset.wire;
+          if (id !== sequence[progress]) {
+            resetPuzzle();
+            return;
+          }
+
+          wire.classList.add("active");
+          slots[progress].textContent = code[progress];
+          progress += 1;
+        });
+      });
+    </script>
+  </body>
+</html>

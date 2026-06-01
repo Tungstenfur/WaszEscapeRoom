@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="320"
+   height="520"
+   viewBox="40 40 320 520"
+   preserveAspectRatio="none"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="bars.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.2288462"
+     inkscape:cx="160.17256"
+     inkscape:cy="260"
+     inkscape:window-width="3440"
+     inkscape:window-height="1368"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <!-- Door frame -->
+  <rect
+     x="40"
+     y="40"
+     width="320"
+     height="520"
+     fill="#ffffee"
+     id="rect1" />
+  <!-- Vertical bars -->
+  <g
+     stroke="#b0b0b0"
+     stroke-width="12"
+     stroke-linecap="round"
+     id="g7">
+    <line
+       x1="80"
+       y1="37"
+       x2="80"
+       y2="559"
+       id="line1" />
+    <line
+       x1="120"
+       y1="37"
+       x2="120"
+       y2="559"
+       id="line2" />
+    <line
+       x1="160"
+       y1="37"
+       x2="160"
+       y2="559"
+       id="line3" />
+    <line
+       x1="200"
+       y1="37"
+       x2="200"
+       y2="559"
+       id="line4" />
+    <line
+       x1="240"
+       y1="37"
+       x2="240"
+       y2="559"
+       id="line5" />
+    <line
+       x1="280"
+       y1="37"
+       x2="280"
+       y2="559"
+       id="line6" />
+    <line
+       x1="320"
+       y1="37"
+       x2="320"
+       y2="559"
+       id="line7" />
+  </g>
+  <!-- Horizontal supports -->
+  <g
+     stroke="#909090"
+     stroke-width="10"
+     id="g9"
+     transform="matrix(0.95249454,0,0,1,9.5010912,0)">
+    <line
+       x1="30"
+       y1="180"
+       x2="370"
+       y2="180"
+       id="line8" />
+    <line
+       x1="30"
+       y1="420"
+       x2="370"
+       y2="420"
+       id="line9" />
+  </g>
+</svg>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="78 58 356 374"
+   cursor="pointer"
+   version="1.1"
+   id="svg13"
+   sodipodi:docname="dog.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs13" />
+  <sodipodi:namedview
+     id="namedview13"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="3.0989305"
+     inkscape:cx="178.12597"
+     inkscape:cy="187"
+     inkscape:window-width="3440"
+     inkscape:window-height="1368"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg13" />
+  <!-- Border Collie head -->
+  <g
+     stroke="#222"
+     stroke-width="4"
+     stroke-linejoin="round"
+     stroke-linecap="round"
+     id="g13">
+    <!-- Left ear -->
+    <path
+       d="M140 140 L80 60 L120 190 Z"
+       fill="#111"
+       id="path1" />
+    <!-- Right ear -->
+    <path
+       d="M372 140 L432 60 L392 190 Z"
+       fill="#111"
+       id="path2" />
+    <!-- Head -->
+    <ellipse
+       cx="256"
+       cy="250"
+       rx="150"
+       ry="170"
+       fill="#111"
+       id="ellipse2" />
+    <!-- White facial blaze -->
+    <path
+       d="       M256 90       C220 140 215 200 220 270       C225 340 210 390 180 430       L332 430       C302 390 287 340 292 270       C297 200 292 140 256 90       Z"
+       fill="#ffffff"
+       id="path3" />
+    <!-- Muzzle -->
+    <ellipse
+       cx="256"
+       cy="340"
+       rx="95"
+       ry="70"
+       fill="#ffffff"
+       id="ellipse3" />
+    <!-- Eyes -->
+    <ellipse
+       cx="205"
+       cy="235"
+       rx="16"
+       ry="20"
+       fill="#6b4b2a"
+       id="ellipse4" />
+    <ellipse
+       cx="307"
+       cy="235"
+       rx="16"
+       ry="20"
+       fill="#6b4b2a"
+       id="ellipse5" />
+    <!-- Pupils -->
+    <circle
+       cx="205"
+       cy="238"
+       r="7"
+       fill="#111"
+       id="circle5" />
+    <circle
+       cx="307"
+       cy="238"
+       r="7"
+       fill="#111"
+       id="circle6" />
+    <!-- Eye highlights -->
+    <circle
+       cx="205.84038"
+       cy="235.61346"
+       r="2.5"
+       fill="#ffffff"
+       id="circle7" />
+    <circle
+       cx="305.58154"
+       cy="235.61346"
+       r="2.5"
+       fill="#ffffff"
+       id="circle8" />
+    <!-- Nose -->
+    <path
+       d="       M256 305       C230 305 215 325 215 345       C215 365 297 365 297 345       C297 325 282 305 256 305       Z"
+       fill="#222"
+       id="path8" />
+    <!-- Mouth -->
+    <path
+       d="M256 345 L256 380"
+       fill="none"
+       id="path9" />
+    <path
+       d="M256 380              C240 395 220 400 205 395"
+       fill="none"
+       id="path10" />
+    <path
+       d="M256 380              C272 395 292 400 307 395"
+       fill="none"
+       id="path11" />
+    <!-- Fur tufts -->
+    <path
+       d="M170 145              C180 115 210 95 235 85"
+       fill="none"
+       id="path12" />
+    <path
+       d="M342 145              C332 115 302 95 277 85"
+       fill="none"
+       id="path13" />
+  </g>
+</svg>
