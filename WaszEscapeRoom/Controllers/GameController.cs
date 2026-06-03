@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using WaszEscapeRoom;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WaszEscapeRoom.Controllers;
@@ -25,7 +23,7 @@ public class GameController:Controller
         {
             return RedirectToAction("Login","Home");
         }
-        var level = WaszEscapeRoom.Database.GetCurrentLevel(username);
+        var level = Database.GetCurrentLevel(username);
         switch (level)
         {
             case 0:
@@ -39,9 +37,11 @@ public class GameController:Controller
             case 4:
                 return RedirectToAction("Level4");
             case 5:
-                return RedirectToAction("Level4End");
+                return RedirectToAction("Level5");
+            case 6:
+                return RedirectToAction("Level5End");
             default:
-                return RedirectToAction("Level4End");
+                return RedirectToAction("Level5End");
         }
     }
     public IActionResult Intro()
@@ -104,7 +104,7 @@ public class GameController:Controller
     [HttpPost]
     public IActionResult Level3Complete(string code)
     {
-        if (code == "739215")
+        if (code == "admin1")
         {
             var username = HttpContext.Session.GetString("Username");
             if (!string.IsNullOrWhiteSpace(username))
@@ -143,6 +143,23 @@ public class GameController:Controller
     }
 
     public IActionResult Level4End()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult Level5()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Level5Complete(string code)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IActionResult Level5End()
     {
         return View();
     }

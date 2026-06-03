@@ -1,5 +1,4 @@
 namespace WaszEscapeRoom;
-using System.Threading;
 using MySqlConnector;
 public class Database
 {
@@ -22,7 +21,7 @@ public class Database
                     ")";
         using var command2 = new MySqlCommand(query, connection);
         command2.ExecuteNonQuery();
-
+        /*
         // migracja
         try
         {
@@ -48,6 +47,7 @@ public class Database
         {
             // Indeks już istnieje
         }
+        */
         connection.Close();
     }
     public static LoginResult verifyLogin(string username, string password)

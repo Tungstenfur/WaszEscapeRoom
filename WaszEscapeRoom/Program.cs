@@ -1,3 +1,4 @@
+using MySqlConnector;
 using WaszEscapeRoom;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,16 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
-Database.InitDB();
+try
+{
+    Database.InitDB();
+}
+catch (MySqlException ex)
+{
+    Console.WriteLine(ex.Message);
+    return;
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

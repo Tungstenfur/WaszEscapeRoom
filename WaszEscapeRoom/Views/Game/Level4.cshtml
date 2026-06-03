@@ -104,7 +104,11 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
-
+      input[type=range]
+      {
+        accent-color: #538053;
+        background: #538053;
+      }
       @@media (max-width: 640px) {
         .grid {
           grid-template-columns: repeat(5, 38px);
@@ -119,28 +123,28 @@
       }
     </style>
   </head>
-  <body>
-    <main class="flex">
-      <section class="panel level4-wrap">
-        <h1>ssh root@@reactor.core.wasz</h1>
-        <p class="intro">
-          Ustaw pokretla stabilizacji. Musisz spelnic wszystkie warunki
-          kontrolne, aby odblokowac klucz dostepu.
-        </p>
-        <section class="console">
-          <div class="conditions" id="conditions"></div>
-        </section>
-        <section class="dials" id="dials"></section>
-        <div class="status" id="status">Reaktor niestabilny. Warunki niespelnione.</div>
-        <form class="finish-form" action="/game/level4complete" method="post">
-          <input type="hidden" name="code" id="code-input" value="" />
-          <button class="finish-button" type="submit" id="finish-btn" disabled>
-            Potwierdz dostep
-          </button>
-        </form>
-      </section>
-    </main>
-    <script>
+<body>
+<main class="flex">
+  <section class="panel level4-wrap">
+    <h1>ssh root@@reactor.core.wasz</h1>
+    <p class="intro">
+      Ustaw pokretla stabilizacji. Musisz spelnic wszystkie warunki
+      kontrolne, aby odblokowac klucz dostepu.
+    </p>
+    <section class="console">
+      <div class="conditions" id="conditions"></div>
+    </section>
+    <section class="dials" id="dials"></section>
+    <div class="status" id="status">Reaktor niestabilny. Warunki niespelnione.</div>
+    <form class="finish-form" action="/game/level4complete" method="post">
+      <input type="hidden" name="code" id="code-input" value=""/>
+      <button class="finish-button" type="submit" id="finish-btn" disabled>
+        Potwierdz dostep
+      </button>
+    </form>
+  </section>
+</main>
+<script>
       const unlockCode = "492706";
       const weights = [7, 3, 9, 5, 11, 13];
       const targetHash = 68;
@@ -213,12 +217,12 @@
       const updateStatus = () => {
         if (isSolved()) {
           status.classList.add("solved");
-          status.textContent = `Reaktor stabilny. Klucz dostepu: ${unlockCode}`;
+          status.textContent = `Klucz dostepu: ${unlockCode}`;
           finishButton.disabled = false;
           codeInput.value = unlockCode;
         } else {
           status.classList.remove("solved");
-          status.textContent = "Reaktor niestabilny. Warunki niespelnione.";
+          status.textContent = "Brak dostępu!. Warunki niespelnione.";
           finishButton.disabled = true;
           codeInput.value = "";
         }
@@ -228,5 +232,5 @@
       renderDials();
       updateStatus();
     </script>
-  </body>
+</body>
 </html>
