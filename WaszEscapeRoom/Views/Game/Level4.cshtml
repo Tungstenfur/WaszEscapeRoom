@@ -1,0 +1,232 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poziom 4</title>
+    <link rel="stylesheet" href="/css/crtmono.css" />
+    <style>
+      .level4-wrap {
+        width: min(980px, 92vw);
+        margin: 0 auto;
+      }
+
+      .panel {
+        border: 1px solid #8b8;
+        padding: 1.5em;
+        background: #051005;
+        box-shadow: 0 0 20px #00ff0033;
+      }
+
+      h1 {
+        margin: 0 0 0.6em;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+
+      .intro {
+        margin: 0 0 1em;
+      }
+
+      .console {
+        border: 1px solid #8b8;
+        padding: 1em;
+        background: #031003;
+        margin: 1em 0;
+      }
+
+      .conditions {
+        display: grid;
+        gap: 0.5em;
+        letter-spacing: 0.1em;
+      }
+
+      .dials {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1em;
+        margin-top: 1em;
+      }
+
+      .dial {
+        border: 1px solid #8b8;
+        padding: 0.8em;
+        background: #031003;
+      }
+
+      .dial label {
+        display: block;
+        margin-bottom: 0.4em;
+      }
+
+      .dial input[type="range"] {
+        width: 100%;
+      }
+
+      .dial-value {
+        display: inline-block;
+        min-width: 2ch;
+        text-align: right;
+      }
+
+      .status {
+        margin: 1.2em 0 0.4em;
+        padding: 0.6em 0.8em;
+        border: 1px solid #8b8;
+        background: #031003;
+      }
+
+      .status.solved {
+        color: #bfb;
+      }
+
+      .finish-form {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .finish-button {
+        background-color: #8b8;
+        color: #051005;
+        border: none;
+        padding: 0.3em 1.2em;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        cursor: pointer;
+      }
+
+      .finish-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      @@media (max-width: 640px) {
+        .grid {
+          grid-template-columns: repeat(5, 38px);
+          grid-auto-rows: 38px;
+        }
+
+        .cell,
+        .cell-button {
+          width: 38px;
+          height: 38px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="flex">
+      <section class="panel level4-wrap">
+        <h1>ssh root@@reactor.core.wasz</h1>
+        <p class="intro">
+          Ustaw pokretla stabilizacji. Musisz spelnic wszystkie warunki
+          kontrolne, aby odblokowac klucz dostepu.
+        </p>
+        <section class="console">
+          <div class="conditions" id="conditions"></div>
+        </section>
+        <section class="dials" id="dials"></section>
+        <div class="status" id="status">Reaktor niestabilny. Warunki niespelnione.</div>
+        <form class="finish-form" action="/game/level4complete" method="post">
+          <input type="hidden" name="code" id="code-input" value="" />
+          <button class="finish-button" type="submit" id="finish-btn" disabled>
+            Potwierdz dostep
+          </button>
+        </form>
+      </section>
+    </main>
+    <script>
+      const unlockCode = "492706";
+      const weights = [7, 3, 9, 5, 11, 13];
+      const targetHash = 68;
+      const targetGroupA = 9;
+      const targetGroupB = 2;
+      const values = [2, 4, 6, 1, 3, 5];
+
+      const conditions = document.getElementById("conditions");
+      const dials = document.getElementById("dials");
+      const status = document.getElementById("status");
+      const finishButton = document.getElementById("finish-btn");
+      const codeInput = document.getElementById("code-input");
+
+      const renderConditions = () => {
+        conditions.innerHTML = "";
+        const hashLine = document.createElement("div");
+        hashLine.textContent = `[HASH] suma kontrolna = ${targetHash}`;
+        const hashDefLine = document.createElement("div");
+        hashDefLine.textContent = "[HASH] (A*7 + B*3 + C*9 + D*5 + E*11 + F*13) % 97";
+        const groupALine = document.createElement("div");
+        groupALine.textContent = `[GRUPA A] (A+B+C) % 10 = ${targetGroupA}`;
+        const groupBLine = document.createElement("div");
+        groupBLine.textContent = `[GRUPA B] (D+E+F) % 10 = ${targetGroupB}`;
+        conditions.appendChild(hashLine);
+        conditions.appendChild(hashDefLine);
+        conditions.appendChild(groupALine);
+        conditions.appendChild(groupBLine);
+      };
+
+      const renderDials = () => {
+        dials.innerHTML = "";
+        values.forEach((value, index) => {
+          const dial = document.createElement("div");
+          dial.className = "dial";
+          const label = document.createElement("label");
+          label.textContent = `Kanal ${String.fromCharCode(65 + index)}: `;
+          const span = document.createElement("span");
+          span.className = "dial-value";
+          span.textContent = value;
+          label.appendChild(span);
+
+          const input = document.createElement("input");
+          input.type = "range";
+          input.min = "0";
+          input.max = "9";
+          input.value = value;
+          input.addEventListener("input", () => {
+            values[index] = Number(input.value);
+            span.textContent = input.value;
+            updateStatus();
+          });
+
+          dial.appendChild(label);
+          dial.appendChild(input);
+          dials.appendChild(dial);
+        });
+      };
+
+      const computeHash = () => {
+        const raw = values.reduce((sum, value, idx) => sum + value * weights[idx], 0);
+        return raw % 97;
+      };
+
+      const isSolved = () => {
+        const groupA = (values[0] + values[1] + values[2]) % 10;
+        const groupB = (values[3] + values[4] + values[5]) % 10;
+        return groupA === targetGroupA && groupB === targetGroupB && computeHash() === targetHash;
+      };
+
+      const updateStatus = () => {
+        if (isSolved()) {
+          status.classList.add("solved");
+          status.textContent = `Reaktor stabilny. Klucz dostepu: ${unlockCode}`;
+          finishButton.disabled = false;
+          codeInput.value = unlockCode;
+        } else {
+          status.classList.remove("solved");
+          status.textContent = "Reaktor niestabilny. Warunki niespelnione.";
+          finishButton.disabled = true;
+          codeInput.value = "";
+        }
+      };
+
+      renderConditions();
+      renderDials();
+      updateStatus();
+    </script>
+  </body>
+</html>

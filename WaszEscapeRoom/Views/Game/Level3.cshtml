@@ -1,0 +1,242 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poziom 3</title>
+    <link rel="stylesheet" href="/css/crtmono.css" />
+    <style>
+      .level3-wrap {
+        width: min(960px, 92vw);
+        margin: 0 auto;
+      }
+
+      .panel {
+        border: 1px solid #8b8;
+        padding: 1.5em;
+        background: #051005;
+        box-shadow: 0 0 20px #00ff0033;
+      }
+
+      h1 {
+        margin: 0 0 0.5em;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+
+      .intro {
+        margin: 0 0 1em;
+      }
+
+      .grids {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2em;
+        margin-top: 1em;
+      }
+
+      .grid-block {
+        border: 1px solid #8b8;
+        padding: 0.8em;
+        background: #031003;
+      }
+
+      .grid-title {
+        margin: 0 0 0.6em;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 50px);
+        grid-auto-rows: 50px;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .cell,
+      .cell-button {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #8b8;
+        background: #051505;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+
+      .cell.on,
+      .cell-button.on {
+        background: #8b8;
+        box-shadow: 0 0 12px #00ff0077;
+      }
+
+      .cell-button {
+        cursor: pointer;
+      }
+
+      .status {
+        margin: 1.2em 0 0.8em;
+        padding: 0.6em 0.8em;
+        border: 1px solid #8b8;
+        background: #031003;
+      }
+
+      .status.solved {
+        color: #bfb;
+      }
+
+      .finish-form {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .finish-button {
+        background-color: #8b8;
+        color: #051005;
+        border: none;
+        padding: 0.3em 1.2em;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        cursor: pointer;
+      }
+
+      .finish-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      @@media (max-width: 640px) {
+        .grid {
+          grid-template-columns: repeat(4, 42px);
+          grid-auto-rows: 42px;
+        }
+
+        .cell,
+        .cell-button {
+          width: 42px;
+          height: 42px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="flex">
+      <section class="panel level3-wrap">
+        <h1>ssh root@@production.db1.main.wasz</h1>
+        <p class="intro">
+          Dopasuj aktywna siatke sygnalu do wzorca. Kazde nacisniecie
+          przelacza wybrane pole oraz jego sasiedztwo (gora, dol, lewo, prawo).
+          Rozwiaz uklad, aby uzyskac klucz dostepu.
+        </p>
+        <section class="grids">
+          <div class="grid-block">
+            <h2 class="grid-title">Wzorzec</h2>
+            <div class="grid" id="target-grid" aria-hidden="true"></div>
+          </div>
+          <div class="grid-block">
+            <h2 class="grid-title">Sygnal aktywny</h2>
+            <div class="grid" id="active-grid"></div>
+          </div>
+        </section>
+        <div class="status" id="status">Sygnal niestabilny. Wyrownaj wszystkie wezly.</div>
+        <form class="finish-form" action="/game/level3complete" method="post">
+          <input type="hidden" name="code" id="code-input" value="" />
+          <button class="finish-button" type="submit" id="finish-btn" disabled>
+            Otworz dostep
+          </button>
+        </form>
+      </section>
+    </main>
+    <script>
+      const size = 4;
+      const target = [
+        1, 0, 1, 0,
+        0, 1, 0, 1,
+        1, 1, 0, 0,
+        0, 1, 1, 0,
+      ];
+      const unlockCode = "admin1";
+      const active = [...target];
+
+      const targetGrid = document.getElementById("target-grid");
+      const activeGrid = document.getElementById("active-grid");
+      const status = document.getElementById("status");
+      const finishButton = document.getElementById("finish-btn");
+      const codeInput = document.getElementById("code-input");
+
+      const indexFor = (row, col) => row * size + col;
+      const coordsFor = (index) => [Math.floor(index / size), index % size];
+
+      const toggleAt = (state, index) => {
+        state[index] = state[index] === 1 ? 0 : 1;
+      };
+
+      const applyMove = (state, index) => {
+        const [row, col] = coordsFor(index);
+        toggleAt(state, indexFor(row, col));
+        if (row > 0) toggleAt(state, indexFor(row - 1, col));
+        if (row < size - 1) toggleAt(state, indexFor(row + 1, col));
+        if (col > 0) toggleAt(state, indexFor(row, col - 1));
+        if (col < size - 1) toggleAt(state, indexFor(row, col + 1));
+      };
+
+      const renderTarget = () => {
+        targetGrid.innerHTML = "";
+        target.forEach((value) => {
+          const cell = document.createElement("div");
+          cell.className = `cell${value ? " on" : ""}`;
+          targetGrid.appendChild(cell);
+        });
+      };
+
+      const renderActive = () => {
+        activeGrid.innerHTML = "";
+        active.forEach((value, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `cell-button${value ? " on" : ""}`;
+          button.setAttribute("aria-pressed", value ? "true" : "false");
+          button.addEventListener("click", () => {
+            applyMove(active, index);
+            renderActive();
+            updateStatus();
+          });
+          activeGrid.appendChild(button);
+        });
+      };
+
+      const isSolved = () => active.every((value, idx) => value === target[idx]);
+
+      const updateStatus = () => {
+        if (isSolved()) {
+          status.classList.add("solved");
+          status.textContent = `Sygnal stabilny. Klucz dostepu: ${unlockCode}`;
+          finishButton.disabled = false;
+          codeInput.value = unlockCode;
+        } else {
+          status.classList.remove("solved");
+          status.textContent = "Sygnal niestabilny. Wyrownaj wszystkie wezly.";
+          finishButton.disabled = true;
+          codeInput.value = "";
+        }
+      };
+
+      const scramble = () => {
+        for (let i = 0; i < 20; i += 1) {
+          const index = Math.floor(Math.random() * (size * size));
+          applyMove(active, index);
+        }
+      };
+
+      renderTarget();
+      scramble();
+      renderActive();
+      updateStatus();
+    </script>
+  </body>
+</html>
