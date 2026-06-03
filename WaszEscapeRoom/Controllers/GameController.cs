@@ -156,7 +156,16 @@ public class GameController:Controller
     [HttpPost]
     public IActionResult Level5Complete(string code)
     {
-        throw new NotImplementedException();
+        if (code == "REACTOR_DOWN")
+        {
+            var username = HttpContext.Session.GetString("Username");
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                Database.SetCurrentLevel(username, 6);
+            }
+            return RedirectToAction("Level5End");
+        }
+        return RedirectToAction("Level5");
     }
 
     public IActionResult Level5End()

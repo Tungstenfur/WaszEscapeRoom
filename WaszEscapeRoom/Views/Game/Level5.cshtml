@@ -1,0 +1,387 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Poziom 5 — Reaktor</title>
+    <link rel="stylesheet" href="/css/crtmono.css"/>
+    <style>
+        .level5-wrap {
+            width: min(980px, 92vw);
+            margin: 0 auto;
+        }
+
+        .panel {
+            border: 1px solid #8b8;
+            padding: 1.5em;
+            background: #051005;
+            box-shadow: 0 0 20px #00ff0033;
+        }
+
+        h1 {
+            margin: 0 0 0.6em;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .intro {
+            margin: 0 0 1em;
+        }
+
+        .terminal {
+            border: 1px solid #8b8;
+            padding: 1em;
+            background: #031003;
+            margin: 1em 0;
+            font-family: "VT323", monospace;
+        }
+
+        .terminal-line {
+            margin: 0.2em 0;
+            white-space: pre-wrap;
+        }
+
+        .terminal-line.error {
+            color: #f66;
+        }
+
+        .terminal-line.success {
+            color: #8b8;
+        }
+
+        .terminal-line.warning {
+            color: #fa0;
+        }
+
+        .terminal-line.info {
+            color: #88f;
+        }
+
+        .exploit-form {
+            margin-top: 1em;
+            display: grid;
+            gap: 0.8em;
+        }
+
+        .exploit-form label {
+            display: block;
+            margin-bottom: 0.3em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .exploit-form input[type="text"] {
+            background: #031003;
+            border: 1px solid #8b8;
+            color: #8b8;
+            padding: 0.5em;
+            font-size: 1.2em;
+            letter-spacing: 0.15em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .exploit-form input[type="text"]:focus {
+            outline: none;
+            border-color: #bfb;
+            box-shadow: 0 0 8px #00ff0044;
+        }
+
+        .submit-btn {
+            background-color: #8b8;
+            color: #051005;
+            border: none;
+            padding: 0.4em 1.2em;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            justify-self: end;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin: 1.2em 0 0.4em;
+            padding: 0.6em 0.8em;
+            border: 1px solid #8b8;
+            background: #031003;
+        }
+
+        .status.solved {
+            color: #bfb;
+        }
+
+        .status.critical {
+            color: #f66;
+            border-color: #f66;
+            animation: critical-flash 0.5s infinite;
+        }
+
+        @@keyframes critical-flash {
+            0% { background: #031003; }
+            50% { background: #300; }
+            100% { background: #031003; }
+        }
+
+        .hint-block {
+            margin-top: 0.8em;
+            padding: 0.6em;
+            border: 1px solid #555;
+            background: #020a02;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .hint-block summary {
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #8b8;
+        }
+
+        .hint-block p {
+            margin: 0.5em 0 0;
+        }
+
+        .lib-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8em;
+            margin-top: 0.8em;
+        }
+
+        .lib-card {
+            border: 1px solid #555;
+            padding: 0.6em;
+            background: #020a02;
+        }
+
+        .lib-card h3 {
+            margin: 0 0 0.4em;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #f66;
+        }
+
+        .lib-card p {
+            margin: 0;
+            font-size: 0.85em;
+            color: #aaa;
+        }
+
+        .lib-card .cve {
+            color: #fa0;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+<main class="flex">
+    <section class="panel level5-wrap">
+        <h1>ssh root@@reactor.core.wasz</h1>
+        <p class="intro">
+            Wykorzystaj lukę w przestarzałej bibliotece sterowania reaktorem, aby wywołać niekontrolowaną reakcję łańcuchową.
+            Musisz zidentyfikować podatność, przygotować payload i wykonać exploit.
+        </p>
+
+        <section class="terminal" id="terminal">
+            <div class="terminal-line">Połączono z reactor-control-daemon v2.1.0 (legacy)</div>
+            <div class="terminal-line info">[INFO] Załadowano moduł: libreactor-legacy.so.10 (DEPRECATED)</div>
+            <div class="terminal-line warning">[UWAGA] Tryb awaryjny — walidacja wyłączona</div>
+            <div class="terminal-line">Oczekiwanie na sekwencję exploit...</div>
+        </section>
+
+        <details class="hint-block">
+            <summary>Audyt biblioteki libreactor-legacy</summary>
+            <div class="lib-info">
+                <div class="lib-card">
+                    <h3>buffer_init(INTEGER size)</h3>
+                    <p>Inicjalizacja bufora komend. Brak walidacji rozmiaru.</p>
+                    <p class="cve">CVE-1987-0042: Buffer overflow</p>
+                </div>
+                <div class="lib-card">
+                    <h3>parse_command(CHAR[] command)</h3>
+                    <p>Parsowanie komend tekstowych. Format string vulnerability.</p>
+                    <p class="cve">CVE-1988-0117: Format string attack</p>
+                </div>
+                <div class="lib-card">
+                    <h3>set_coolant_rate(INT rate)</h3>
+                    <p>Ustawianie przepływu chłodziwa. Brak zabezpieczeń przed ujemnymi wartościami.</p>
+                    <p class="cve">CVE-1989-0003: Integer overflow - wrap-around</p>
+                </div>
+                <div class="lib-card">
+                    <h3>emergency_shutdown(CHAR[] username, CHAR[] password)</h3>
+                    <p>Wyłączenie awaryjne. Podprotokół wymaga klucza, ale klucz domyślny nie został zmieniony.</p>
+                    <p class="cve">CVE-1986-0099: Default credentials "admin:admin"</p>
+                </div>
+            </div>
+        </details>
+
+        <form class="exploit-form" id="exploit-form" action="/game/level5complete" method="post">
+            <input type="hidden" name="code" id="code-input" value=""/>
+            <div>
+                <label for="payload">Payload exploitu:</label>
+                <input type="text" id="payload" placeholder="Wpisz payload exploitu..." autocomplete="off" spellcheck="false"/>
+            </div>
+            <button class="submit-btn" type="submit" id="exploit-btn" disabled>
+                Wykonaj exploit
+            </button>
+        </form>
+
+        <div class="status" id="status">Oczekiwanie na payload...</div>
+    </section>
+</main>
+<script>
+    const terminal = document.getElementById("terminal");
+    const payloadInput = document.getElementById("payload");
+    const exploitBtn = document.getElementById("exploit-btn");
+    const statusEl = document.getElementById("status");
+    const codeInput = document.getElementById("code-input");
+
+    const successCode = "REACTOR_DOWN";
+    let phase = 1;
+    let exploitRunning = false;
+
+    const addTerminalLine = (text, type = "") => {
+        const line = document.createElement("div");
+        line.className = `terminal-line${type ? " " + type : ""}`;
+        line.textContent = text;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+    };
+
+    const normalizeInput = (input) => {
+        return input.trim().toUpperCase().replace(/\s+/g, "");
+    };
+
+    const runPhase1Animation = () => {
+        exploitRunning = true;
+        exploitBtn.disabled = true;
+        addTerminalLine("", "");
+        addTerminalLine("--- WYKONYWANIE EXPLOITU (FAZA 1/2) ---", "warning");
+        addTerminalLine("Wysyłanie payloadu do reactor-control-daemon...", "info");
+
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] buffer_init(): overflow wykryty!", "error");
+        }, 600);
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] set_coolant_rate(-1): uint8_t wrap-around → 255!", "error");
+            addTerminalLine("[CRITICAL] uszkodzenie pompy chlodzenia!", "error");
+        }, 1200);
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] Przepływ chłodziwa: BRAK - reaktor przegrzewa się!", "error");
+        }, 1800);
+        setTimeout(() => {
+            addTerminalLine("[UWAGA] Temperatura rdzenia rośnie...", "warning");
+            statusEl.classList.add("critical");
+            statusEl.textContent = "⚠ REAKTOR NIESTABILNY — wymagane wyłączenie awaryjne ⚠";
+        }, 2400);
+        setTimeout(() => {
+            addTerminalLine("", "");
+            addTerminalLine("--- FAZA 2: WYŁĄCZENIE AWARYJNE ---", "warning");
+            addTerminalLine("[SYSTEM] emergency_shutdown() jest teraz dostępna.", "info");
+            addTerminalLine("[SYSTEM] Podaj poświadczenia, aby wywołać wyłączenie.", "info");
+            addTerminalLine("", "");
+            statusEl.classList.remove("critical");
+            statusEl.classList.add("solved");
+            statusEl.textContent = "Faza 1 ukończona. Wpisz komendę emergency shutdown.";
+
+            phase = 2;
+            exploitRunning = false;
+            payloadInput.disabled = false;
+            payloadInput.value = "";
+            payloadInput.placeholder = "Wpisz komendę emergency shutdown...";
+            payloadInput.focus();
+        }, 3200);
+    };
+
+    const runPhase2Animation = () => {
+        exploitBtn.disabled = true;
+        addTerminalLine("", "");
+        addTerminalLine("--- WYKONYWANIE EXPLOITU (FAZA 2/2) ---", "warning");
+
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] emergency_shutdown(admin, admin): poświadczenia zaakceptowane", "warning");
+        }, 600);
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] Wyłączanie awaryjne: NIEPOWODZENIE - Brak czynnika chłodniczego!", "error");
+        }, 1200);
+        setTimeout(() => {
+            addTerminalLine("[CRITICAL] Temperatura rdzenia: KRYTYCZNA!", "error");
+            statusEl.classList.add("critical");
+            statusEl.textContent = "⚠ KRYTYCZNE PRZEGRZANIE RDZENIA — REAKTOR NIESTABILNY ⚠";
+        }, 1800);
+        setTimeout(() => {
+            addTerminalLine("Klucz wyjściowy: " + successCode, "success");
+            addTerminalLine("--- EKSPOLOZJA RDZENIA ZA: ---", "error");
+            statusEl.classList.remove("critical");
+            statusEl.classList.add("solved");
+            codeInput.value = successCode;
+            exploitBtn.textContent = "Dalej";
+            exploitBtn.disabled = false;
+            exploitBtn.addEventListener("click", () => {
+                document.getElementById("exploit-form").submit();
+            }, { once: true });
+        }, 2600);
+        setTimeout(() => {addTerminalLine("5")},2600);
+        setTimeout(() => {addTerminalLine("4")},3200);
+        setTimeout(() => {addTerminalLine("3")},3800);
+        setTimeout(() => {addTerminalLine("2")},4400);
+        setTimeout(() => {addTerminalLine("1")},5000);
+        setTimeout(() => {addTerminalLine("0")},5600);
+    };
+
+    payloadInput.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+
+        if (exploitRunning) return;
+
+        const value = payloadInput.value.trim();
+        if (value.length > 0) {
+            addTerminalLine(`> ${value}`);
+        }
+
+        if (phase === 1) {
+            if (normalizeInput(value) === "SET_COOLANT(-1)") {
+                statusEl.classList.add("solved");
+                statusEl.textContent = "Komenda zaakceptowana. Trwa wykonanie...";
+                addTerminalLine("[OK] Walidacja komendy: sukces", "success");
+                addTerminalLine("[OK] Integer overflow wykryty: -1 → 255 (uint8_t)", "success");
+                payloadInput.disabled = true;
+                runPhase1Animation();
+            } else if (value.length > 3) {
+                statusEl.classList.remove("solved", "critical");
+                statusEl.textContent = "Niepoprawna komenda. Sprawdź składnię.";
+                addTerminalLine("[BŁĄD] Walidacja komendy: niepowodzenie", "error");
+            }
+        } else if (phase === 2) {
+            if (normalizeInput(value) === "EMERGENCY_SHUTDOWN(ADMIN,ADMIN)") {
+                statusEl.classList.add("solved");
+                statusEl.textContent = "Poświadczenia zaakceptowane. Trwa wykonanie...";
+                addTerminalLine("[OK] Walidacja poświadczeń: sukces", "success");
+                payloadInput.disabled = true;
+                runPhase2Animation();
+            } else if (value.length > 3) {
+                statusEl.classList.remove("solved", "critical");
+                statusEl.textContent = "Niepoprawna komenda lub poświadczenia.";
+                addTerminalLine("[BŁĄD] Walidacja komendy: niepowodzenie", "error");
+            }
+        }
+    });
+
+    document.getElementById("exploit-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+    });
+</script>
+</body>
+</html>
