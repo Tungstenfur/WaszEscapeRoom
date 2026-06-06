@@ -1,0 +1,44 @@
+@model List<(string username, int timeSeconds)>
+
+@{
+    ViewData["Title"] = "Leaderboard";
+    var currentLevel = ViewBag.CurrentLevel;
+}
+
+<h1>Leaderboard - Poziom @currentLevel</h1>
+
+<div>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <a href="@Url.Action("Leaderboard", new { level = i })" class="btn btn-primary @(currentLevel == i ? "active" : "")">Poziom @i</a>
+    }
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Miejsce</th>
+            <th>Użytkownik</th>
+            <th>Czas</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].username</td>
+                    <td>@Model[i].timeSeconds s</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">Brak zapisów dla tego poziomu</td>
+            </tr>
+        }
+    </tbody>
+</table>

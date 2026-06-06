@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/WaszEscapeRoom.styles.css" asp-append-version="true"/>
+    @RenderSection("Styles", required: false)
 </head>
 <body>
 <header>
@@ -41,6 +42,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="index">Play</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Leaderboard">Leaderboard</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -54,7 +58,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2026 - WaszEscapeRoom - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2026 - WaszEscapeRoom
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

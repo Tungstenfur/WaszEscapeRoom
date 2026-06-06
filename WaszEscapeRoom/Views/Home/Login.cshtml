@@ -1,6 +1,9 @@
 @{
     ViewData["Title"] = "Login";
 }
+@section Styles {
+    <link rel="stylesheet" href="/css/register.css" asp-append-version="true"/>
+}
 <div class="formWrap">
     @if (!ViewData.ModelState.IsValid)
     {

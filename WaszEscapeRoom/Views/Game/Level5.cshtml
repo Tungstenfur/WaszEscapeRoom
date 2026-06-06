@@ -196,7 +196,7 @@
         <section class="terminal" id="terminal">
             <div class="terminal-line">Połączono z reactor-control-daemon v2.1.0 (legacy)</div>
             <div class="terminal-line info">[INFO] Załadowano moduł: libreactor-legacy.so.10 (DEPRECATED)</div>
-            <div class="terminal-line warning">[UWAGA] Tryb awaryjny — walidacja wyłączona</div>
+            <div class="terminal-line warning">[UWAGA] Tryb awaryjny - walidacja wyłączona</div>
             <div class="terminal-line">Oczekiwanie na sekwencję exploit...</div>
         </section>
 
@@ -214,7 +214,7 @@
                     <p class="cve">CVE-1988-0117: Format string attack</p>
                 </div>
                 <div class="lib-card">
-                    <h3>set_coolant_rate(INT rate)</h3>
+                    <h3>set_coolant(INT rate)</h3>
                     <p>Ustawianie przepływu chłodziwa. Brak zabezpieczeń przed ujemnymi wartościami.</p>
                     <p class="cve">CVE-1989-0003: Integer overflow - wrap-around</p>
                 </div>
@@ -350,16 +350,32 @@
         if (value.length > 0) {
             addTerminalLine(`> ${value}`);
         }
-
+        if(normalizeInput(value).includes("BUFFER_INIT(")) {
+            addTerminalLine("[OK] zmieniono rozmiar bufora");
+            return;
+        }
+        if (normalizeInput(value).includes("PARSE_COMMAND(")) {
+            addTerminalLine("[OK] parsowanie komendy: sukces");
+            return;
+        }
+        
+            
         if (phase === 1) {
+            if(normalizeInput(value).includes("EMERGENCY_SHUTDOWN(")) {
+                addTerminalLine("[BŁĄD] Komenda emergency_shutdown jest dostępna, nie wykryto zagrożenia", "error");
+            }
             if (normalizeInput(value) === "SET_COOLANT(-1)") {
                 statusEl.classList.add("solved");
                 statusEl.textContent = "Komenda zaakceptowana. Trwa wykonanie...";
                 addTerminalLine("[OK] Walidacja komendy: sukces", "success");
-                addTerminalLine("[OK] Integer overflow wykryty: -1 → 255 (uint8_t)", "success");
+                addTerminalLine("[OK] Integer overflow wykryty: -1 > 256 (uint8_t)", "success");
                 payloadInput.disabled = true;
                 runPhase1Animation();
-            } else if (value.length > 3) {
+            } 
+            else if(normalizeInput(value).includes("SET_COOLANT(")) {
+                addTerminalLine("[OK] Zmieniono przepływ chłodziwa", "success");
+            }
+            else if (value.length > 3) {
                 statusEl.classList.remove("solved", "critical");
                 statusEl.textContent = "Niepoprawna komenda. Sprawdź składnię.";
                 addTerminalLine("[BŁĄD] Walidacja komendy: niepowodzenie", "error");

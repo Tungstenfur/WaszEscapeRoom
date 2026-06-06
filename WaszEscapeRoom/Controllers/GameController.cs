@@ -3,8 +3,33 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WaszEscapeRoom.Controllers;
 
-public class GameController:Controller
+public class GameController : Controller
 {
+    private int GetUserId()
+    {
+        var username = HttpContext.Session.GetString("Username");
+        return Database.GetUserId(username);
+    }
+
+    private void SaveLevelTime(int level)
+    {
+        var startTime = HttpContext.Session.GetString($"Level{level}Start");
+        if (long.TryParse(startTime, out var startTicks))
+        {
+            var elapsed = (int)(DateTime.UtcNow.Ticks - startTicks) / TimeSpan.TicksPerSecond;
+            var userId = GetUserId();
+            if (userId > 0)
+            {
+                Database.LogLevelCompletion(userId, level, (int)elapsed);
+            }
+        }
+    }
+
+    private void StartLevelTimer(int level)
+    {
+        HttpContext.Session.SetString($"Level{level}Start", DateTime.UtcNow.Ticks.ToString());
+    }
+
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         var username = HttpContext.Session.GetString("Username");
@@ -50,12 +75,15 @@ public class GameController:Controller
     }
     public IActionResult Level1()
     {
+        StartLevelTimer(1);
         return View();
     }
 
     [HttpGet]
     public IActionResult Level2()
     {
+        SaveLevelTime(1);
+        StartLevelTimer(2);
         return View();
     }
 
@@ -77,12 +105,14 @@ public class GameController:Controller
 
     public IActionResult Level2End()
     {
+        SaveLevelTime(2);
         return View();
     }
 
     [HttpGet]
     public IActionResult Level3()
     {
+        StartLevelTimer(3);
         return View();
     }
 
@@ -118,12 +148,14 @@ public class GameController:Controller
 
     public IActionResult Level3End()
     {
+        SaveLevelTime(3);
         return View();
     }
 
     [HttpGet]
     public IActionResult Level4()
     {
+        StartLevelTimer(4);
         return View();
     }
 
@@ -144,12 +176,14 @@ public class GameController:Controller
 
     public IActionResult Level4End()
     {
+        SaveLevelTime(4);
         return View();
     }
 
     [HttpGet]
     public IActionResult Level5()
     {
+        StartLevelTimer(5);
         return View();
     }
 
@@ -168,8 +202,25 @@ public class GameController:Controller
         return RedirectToAction("Level5");
     }
 
+    public IActionResult Leaderboard(int level = 1)
+    {
+        if (level < 1 || level > 5)
+        {
+            level = 1;
+        }
+        var leaderboardData = Database.GetLeaderboardForLevel(level);
+        ViewBag.CurrentLevel = level;
+        return View(leaderboardData);
+    }
+
     public IActionResult Level5End()
     {
+        SaveLevelTime(5);
         return View();
+    }
+    public IActionResult ResetLevels()
+    {
+        Database.deleteUserProgress(HttpContext.Session.GetString("Username")??throw new InvalidOperationException("User not logged in"));
+        return RedirectToAction("Index");
     }
 }

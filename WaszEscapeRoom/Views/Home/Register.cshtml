@@ -1,4 +1,7 @@
 @{ ViewData["Title"] = "Register"; }
+@section Styles {
+    <link rel="stylesheet" href="/css/register.css" asp-append-version="true"/>
+}
 <div class="formWrap">
     <div class="alert alert-danger" id="error">
     @if (!ViewData.ModelState.IsValid)
