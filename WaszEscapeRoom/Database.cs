@@ -174,7 +174,7 @@ public class Database
         command.ExecuteNonQuery();
     }
 
-    public static List<(string username, int timeSeconds)> GetLeaderboardForLevel(int level, int limit = 10)
+    public static  List<(string username, int timeSeconds)> GetLeaderboardForLevel(int level, int limit = 10)
     {
         var result = new List<(string username, int timeSeconds)>();
         using var connection = new MySqlConnection(_login);
@@ -190,7 +190,7 @@ public class Database
         using var command = new MySqlCommand(query, connection);
         command.Parameters.AddWithValue("@level", level);
         command.Parameters.AddWithValue("@limit", limit);
-        using var reader = command.ExecuteReader();
+        using var reader = command.ExecuteReaderAsync().Result;
         while (reader.Read())
         {
             result.Add((reader.GetString("username"), reader.GetInt32("time_seconds")));
@@ -198,13 +198,13 @@ public class Database
         return result;
     }
 
-    public static void deleteUserProgress(string username)
+    public static async Task deleteUserProgress(string username)
     {
         using var connection = new MySqlConnection(_login);
-        connection.Open();
+        await connection.OpenAsync();
         var query = "DELETE FROM Progress WHERE user_id = (SELECT id FROM users WHERE username = @username)";
         using var command = new MySqlCommand(query, connection);
         command.Parameters.AddWithValue("@username", username);
-        command.ExecuteNonQuery();
+        await command.ExecuteNonQueryAsync();
     }
 }

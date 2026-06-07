@@ -218,9 +218,9 @@ public class GameController : Controller
         SaveLevelTime(5);
         return View();
     }
-    public IActionResult ResetLevels()
+    public async Task<IActionResult> ResetLevels()
     {
-        Database.deleteUserProgress(HttpContext.Session.GetString("Username")??throw new InvalidOperationException("User not logged in"));
+        await Database.deleteUserProgress(HttpContext.Session.GetString("Username")??throw new InvalidOperationException("User not logged in"));
         return RedirectToAction("Index");
     }
 }

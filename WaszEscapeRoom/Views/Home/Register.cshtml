@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/css/register.css" asp-append-version="true"/>
 }
 <div class="formWrap">
-    <div class="alert alert-danger" id="error">
+    <div class="alert alert-danger" id="error" style="display: @(ViewData.ModelState.IsValid ? "none" : "block")">
     @if (!ViewData.ModelState.IsValid)
     {
             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -20,6 +20,7 @@
         <label for="repassword">Powtórz hasło</label>
         <input type="password" id="repassword" name="repassword">
         <button type="submit" id="register">Zarejestruj się</button>
+        <label>Masz już konto? <a href="Login">Zaloguj się</a></label>
     </form>
 </div>
 <script>
