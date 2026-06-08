@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    const audio = new Audio("assets/typing.opus");
+    const audio = new Audio("/sound/typing.opus");
     audio.volume = 0.2;
     audio.playbackRate = 1.5;
     audio.loop = true;
